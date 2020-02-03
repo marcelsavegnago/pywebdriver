@@ -125,7 +125,6 @@ else:
                 try:
                     if self.is_online():
                         status = 'connected'
-                        print("CONNECTED")
                     else:
                         status = 'connecting'
                     # if res['printer']['status_error']:
@@ -142,6 +141,10 @@ else:
                 'messages': messages,
             }
 
+        def receipt(self, content):
+            Layout(content).format(self)
+            self.cut()
+
         def printstatus(self, eprint):
             # <PyWebDriver> Full refactoring of the function to allow
             # localisation and to make more easy the search of the ip
@@ -156,8 +159,7 @@ else:
                     """tly connected with a network cable,<br/>"""
                     """ that the LAN is setup with DHCP, and<br/>"""
                     """that network addresses are available""")
-                Layout('<div>'+msg+'</div>').format(self)
-                self.cut()
+                self.receipt('<div>'+msg+'</div>')
             else:
                 addr_lines = []
                 for ifaceName in interfaces():
@@ -181,7 +183,7 @@ else:
                     ''.join(addr_lines),
                     config.getint('flask', 'port'),
                 )
-                Layout('<div>'+msg+'</div>').format(self)
+                self.receipt(msg)
 
         # #####################################################################
         # <Odoo Version 7>
