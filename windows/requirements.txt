@@ -1,0 +1,17 @@
+#jcconv
+simplejson
+Flask
+Flask-Babel
+Flask-cors
+pyusb
+pyserial
+pif
+Pillow
+netifaces
+pymtp
+setuptools>=34
+pip>=10
+pywin32
+git+https://github.com/akretion/py-xml-escpos.git@py3
+#git+https://github.com/akretion/pypostelium.git@master
+git+https://github.com/akretion/pyposdisplay.git@py3

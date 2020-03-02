@@ -1,0 +1,39 @@
+jobs:
+  include:
+    - name: "Bionic beaver"
+      dist: bionic
+      addons:
+        apt:
+          update: true
+          packages:
+            - cups
+            - libcups2-dev
+            - debhelper
+            - dh-virtualenv
+            - dh-systemd
+            - devscripts
+            - python3-wheel
+            - libcups2-dev
+            - python3-setuptools
+            - libmtp-dev
+            - libffi-dev
+            - fakeroot
+            - python3-pip
+    - name: "Python 3.7.6 on Windows"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.7.6
+        - python -m pip install --upgrade pip
+        - pip install virtualenv
+        - virtualenv $HOME/pywebdriver-venv
+        - source $HOME/pywebdriver-venv/Scripts/activate
+        - pip install -r windows/requirements.txt
+        - pip install pyinstaller
+      env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+
+script:
+  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then pyinstaller.exe windows/pywebdriver.spec ; fi
+  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then cd build/pywebdriver ; ls ; timeout 15s ./pywebdriver.exe ; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then mkdir -p build; dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by travis"; debuild ; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo dpkg -i $HOME/build/akretion/pywebdriver_$(date +%Y%m%d)_amd64.deb ; fi
